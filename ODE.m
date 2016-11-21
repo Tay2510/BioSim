@@ -1,3 +1,11 @@
+clc
+clear all;
+
+T_end = 10;
+delta_t = 0.01;
+N = T_end/delta_t;
+timeline = 0:delta_t:(T_end - delta_t);
+
 MDM2_initial = 2.53;
 ARF_initial = 2.79;
 ARF_MDM2_initial = 1.99;
@@ -39,3 +47,10 @@ for i = 2 : N
     RB_E2F1(i) = RB_E2F1(i - 1) + delta_t * (1 - E2F1(i - 1));
     RB(i) = RB(i - 1) + delta_t * (2 - RBp(i - 1) - RB_E2F1(i - 1));
 end
+
+
+%% Plot
+plot(timeline, p53killer, timeline, p53helper, timeline, MDM2, timeline, ARF, timeline, RB, timeline, RBp);
+legend('p53_k_i_l_l_e_r','p53_h_e_l_p_e_r','MDM2','ARF', 'RB', 'RBp');
+xlabel('time');
+ylabel('concentration');
