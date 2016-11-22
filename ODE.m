@@ -14,7 +14,6 @@ E2F1_initial = 0.9;
 RBp_initial = 1.88;
 RB_E2F1_initial = 0;
 RB_initial = 0;
-DYRK2_initial = 2;
 
 p53helper_initial = 0.39;
 p53killer_initial = 0.39;
@@ -44,6 +43,7 @@ for i = 2 : N
     DYRK2(i) = DYRK2(i - 1) + delta_t * (-0.0003 * DYRK2(i - 1));
     p53helper(i) = p53helper(i - 1) + delta_t * (-DYRK2(i - 1) * p53helper(i - 1) / (0.1 + p53helper(i - 1)) + 0.5 - (0.1 + MDM2(i - 1)) * p53helper(i - 1) + 0.5 * p53killer(i - 1) / (0.1 + p53killer(i - 1)));
     p53killer(i) = p53killer(i - 1) + delta_t * (DYRK2(i - 1) * p53helper(i - 1) / (0.1 + p53helper(i - 1)) - 0.5 * p53killer(i - 1) / (p53killer(i - 1)) - (0.1 + MDM2(i - 1) * p53killer(i - 1)));
+    MDM2(i) = MDM2(i - 1) + delta_t * (0.02 + 0.3 * (p53killer(i - 1) + p53helper(i - 1)) - 0.1 * MDM2(i - 1) - 10 * ARF(i - 1) * MDM2(i - 1) + 2.1 * ARF_MDM2(i - 1));
     ARF(i) = ARF(i - 1) + delta_t * (0.01 + 0.3 * E2F1(i - 1) - 0.1 * ARF(i - 1) - 10 * ARF(i - 1) * MDM2(i - 1) + 2.1 * ARF_MDM2(i - 1));
     ARF_MDM2(i) = ARF_MDM2(i - 1) + delta_t * (10 * ARF(i - 1) * MDM2(i - 1) - 2 * ARF_MDM2(i - 1) - 0.1 * ARF_MDM2(i - 1) - 0.1 * ARF_MDM2(i - 1));
     E2F1(i) = E2F1(i - 1) + delta_t * (-5 * RB(i - 1) * E2F1(i - 1) + RB_E2F1(i - 1));
