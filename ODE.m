@@ -5,7 +5,7 @@ T_end = 10;
 delta_t = 0.01;
 N = T_end/delta_t;
 timeline = 0:delta_t:(T_end - delta_t);
-sigma = 0.001
+sigma = 0.001;
 
 MDM2_initial = 2.53;
 ARF_initial = 2.79;
@@ -19,6 +19,7 @@ p53helper_initial = 0.39;
 p53killer_initial = 0.39;
 DYRK2_initial = 2;
 
+DYRK2 = zeros(1, N);
 p53helper = zeros(1, N);
 p53killer = zeros(1, N);
 MDM2 = zeros(1, N);
@@ -48,8 +49,8 @@ for i = 2 : N
     ARF_MDM2(i) = ARF_MDM2(i - 1) + delta_t * (10 * ARF(i - 1) * MDM2(i - 1) - 2 * ARF_MDM2(i - 1) - 0.1 * ARF_MDM2(i - 1) - 0.1 * ARF_MDM2(i - 1));
     E2F1(i) = E2F1(i - 1) + delta_t * (-5 * RB(i - 1) * E2F1(i - 1) + RB_E2F1(i - 1));
     RBp(i) = sigma + RBp(i - 1) + delta_t * (-0.5 * RBp(i - 1) / (0.1 + RBp(i - 1)));
-    RB_E2F1(i) = RB_E2F1(i - 1) + delta_t * (1 - E2F1(i - 1));
-    RB(i) = RB(i - 1) + delta_t * (2 - RBp(i - 1) - RB_E2F1(i - 1));
+    RB_E2F1(i) = 1 - E2F1(i);
+    RB(i) = 2 - RBp(i) - RB_E2F1(i);
 end
 
 
