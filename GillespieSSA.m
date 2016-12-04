@@ -12,7 +12,7 @@ fprintf('----------------------[Start Simulation]----------------------\n')
 %% General Setting
 % [ General ]
 M = 1;                                                                      % number of trials
-Time_End = 1000;                                                           % unit: ?   (end point of time line)  
+Time_End = 100;                                                           % unit: ?   (end point of time line)  
 
 % [ Parameters ]
 % degradation
@@ -45,30 +45,33 @@ Hxz_act = @(x) x^h/(Kxz^h + x^h);
 
 %% Model parameters
 % cell volume
-volume = 100;
-
-% Initial Condition
-%DYRK2_initial = 2*volume;
-p53helper_initial = 0.39*volume;
-p53killer_initial = 0.39*volume;
-MDM2_initial = 2.53*volume;
-ARF_initial = 2.79*volume;
-ARF_MDM2_initial = 1.99*volume;
-E2F1_initial = 0.9*volume;
-RBp_initial = 1.88*volume;
-RB_E2F1_initial = 0*volume;
-RB_initial = 0*volume;
+V = 100;
 
 % constant boundary
-total_E2F1 = 1*volume;
-total_RB = 2*volume;
+total_E2F1 = 1*V;
+total_RB = 2*V;
+
+% Initial Condition
+init_p53helper = 0.39*V;
+init_p53killer = 0.39*V;
+init_MDM2 = 2.53*V;
+init_ARF = 2.79*V;
+init_ARF_MDM2 = 1.99*V;
+init_CycE = 3.83*V; 
+init_E2F1 = 0.9*V;
+init_RBp = 1.88*V;
+init_p21 = 1.32*V;
+init_p21_CycE = 1.25*V;
+
+init_RB_E2F1 = total_E2F1 - init_E2F1;
+init_RB = total_RB - init_RBp - init_RB_E2F1;
 
 % coefficients
 k_out = 0.0003;
 k_sp53 = 0.5;
 kp_dp53 = 0.1;
 k_pp53 = 1;
-k_dpp53 = 0.5;
+k_dpp53 = 0.5; % increase in virus B-pathway
 j_pp53 = 0.1;
 j_dpp53 = 0.1;
 kp_sMDM2 = 0.02;
@@ -80,7 +83,7 @@ kp_sARF = 0.01;
 kpp_sARF = 0.3;
 k_dARF = 0.1;
 k_asRE = 5;
-k_dsRE = 1;
+k_dsRE = 1; % increase in virus A-pathway
 k_pRB = 1;
 k_dpRB = 0.5;
 j_pRB = 0.1;
@@ -96,29 +99,38 @@ kp_sp21 = 0.03;
 kpp_sp21 = 0.3;
 kppp_sp21 = 0.01;
 
+% volume modification on coefficients?
+k_out = k_out*V;
+k_sp53 = k_sp53*V;
+kp_dp53 = kp_dp53*V;
+k_pp53 = k_pp53*V;
+k_dpp53 = k_dpp53*V;
+j_pp53 = j_pp53*V;
+j_dpp53 = j_dpp53*V;
+kp_sMDM2 = kp_sMDM2*V;
+kpp_sMDM2 = kpp_sMDM2*V;
+kp_dMDM2 = kp_dMDM2*V;
+k_asAM = k_asAM*V;
+k_dsAM = k_dsAM*V;
+kp_sARF = kp_sARF*V;
+kpp_sARF = kpp_sARF*V;
+k_dARF = k_dARF*V;
+k_asRE = k_asRE*V;
+k_dsRE = k_dsRE*V;
+k_pRB = k_pRB*V;
+k_dpRB = k_dpRB*V;
+j_pRB = j_pRB*V;
+j_dpRB = j_dpRB*V;
 
-% volume modification of on coefficients?
-k_out = k_out*volume;
-k_sp53 = k_sp53*volume;
-kp_dp53 = kp_dp53*volume;
-k_pp53 = k_pp53*volume;
-k_dpp53 = k_dpp53*volume;
-j_pp53 = j_pp53*volume;
-j_dpp53 = j_dpp53*volume;
-kp_sMDM2 = kp_sMDM2*volume;
-kpp_sMDM2 = kpp_sMDM2*volume;
-kp_dMDM2 = kp_dMDM2*volume;
-k_asAM = k_asAM*volume;
-k_dsAM = k_dsAM*volume;
-kp_sARF = kp_sARF*volume;
-kpp_sARF = kpp_sARF*volume;
-k_dARF = k_dARF*volume;
-k_asRE = k_asRE*volume;
-k_dsRE = k_dsRE*volume;
-k_pRB = k_pRB*volume;
-k_dpRB = k_dpRB*volume;
-j_pRB = j_pRB*volume;
-j_dpRB = j_dpRB*volume;
+kp_sE = kp_sE*V;
+kpp_sE = kpp_sE*V;
+k_dE = k_dE*V;
+k_asp21E = k_asp21E*V;
+k_dsp21E = k_dsp21E*V;
+k_dp21 = k_dp21*V;
+kp_sp21 = kp_sp21*V;
+kpp_sp21 = kpp_sp21*V;
+kppp_sp21 = kppp_sp21*V;
 
 
 %%  Preallocation 
@@ -129,159 +141,135 @@ dist_protein_z_OFF1 = zeros(1,M);
 
 dist_p53helper = zeros(1,M);
 dist_p53killer = zeros(1,M);
-dist_MDM2 = zeros(1,M);
-dist_ARF = zeros(1,M);
-dist_ARF_MDM2 = zeros(1,M);
-dist_E2F1 = zeros(1,M);
-dist_RBp = zeros(1,M);
-dist_RB_E2F1 = zeros(1,M);
-dist_RB = zeros(1,M);
 
-n_p53helper = p53helper_initial;
-n_p53killer = p53killer_initial;
-n_MDM2 = MDM2_initial;
-n_ARF = ARF_initial;
-n_ARF_MDM2 = ARF_MDM2_initial;
-n_E2F1 = E2F1_initial;
-n_RBp = RBp_initial;
-n_RB_E2F1 = RB_E2F1_initial;
-n_RB = RB_initial;  
+n_p53helper = init_p53helper;
+n_p53killer = init_p53killer;
+n_MDM2 = init_MDM2;
+n_ARF = init_ARF;
+n_ARF_MDM2 = init_ARF_MDM2;
+n_CycE = init_CycE;
+n_E2F1 = init_E2F1;
+n_RBp = init_RBp;
+n_p21 = init_p21;
+n_p21_CycE = init_p21_CycE;
+
+n_RB_E2F1 = init_RB_E2F1;
+n_RB = init_RB;  
 
 %% State description 
 % [state vector]
 %-------------------------------------------
-stateVector = [
-               n_p53helper;  ... 1
+stateVector = [n_p53helper;  ... 1
                n_p53killer;  ... 2
                n_MDM2;       ... 3
                n_ARF;        ... 4
                n_ARF_MDM2;   ... 5
-               n_E2F1;       ... 6
-               n_RBp;        ... 7
-               n_CycE;       ... 8
+               n_CycE;       ... 6
+               n_E2F1;       ... 7
+               n_RBp;        ... 8               
                n_p21;        ... 9
-               n_RB_E2F1;    ... 10 (modified by boundary)
-               n_RB];        ... 11 (modified by boundary)                  
+               n_p21_CycE;   ... 10
+               n_RB_E2F1;    ... 11 (modified by boundary)
+               n_RB];        ... 12 (modified by boundary)                  
 %-------------------------------------------
 N = length(stateVector);
+
 initialState = stateVector; % store for future initialization
 
-% events (columns of state-change matrix)
-    
+% Reaction channels (events) = columns of the state-change matrix    
 % (1: p53helper) 
-% + 
-dp_p53helper_born = zeros(N,1); 
-dp_p53helper_born(2) = 1;
-dp_p53helper_pp = zeros(N,1);
-dp_p53helper_pp(2) = 1;
-%dp_p53helper_pp(3) = -1;  %???
-    
-% - 
-dn_p53helper_die = zeros(N,1);
-dn_p53helper_die(2) = -1;
-dn_p53helper_DYRK2 = zeros(N,1); 
-dn_p53helper_DYRK2(2) = -1;
+d_p53helper_born = zeros(N,1); 
+d_p53helper_born(1) = 1;
+
+d_p53helper_die = zeros(N,1);
+d_p53helper_die(1) = -1;
     
 % (2: p53killer)
-% + 
-dp_p53killer_DYRK2 = zeros(N,1);
-dp_p53killer_DYRK2(3) = 1;
-    
-% - 
-dn_p53killer_die = zeros(N,1);
-dn_p53killer_die(3) = -1;
-dn_p53killer_pp = zeros(N,1);
-dn_p53killer_pp(3) = -1;
-%dn_p53killer_pp(2) = 1;   %???    
-    
-% (3: MDM2)
-% + 
-dp_MDM2_born = zeros(N,1);
-dp_MDM2_born(4) = 1;
-dp_MDM2_p53T = zeros(N,1);
-dp_MDM2_p53T(4) = 1;
-dp_MDM2_disso = zeros(N,1);
-dp_MDM2_disso(4) = 1;
+d_p53killer_born = zeros(N,1);
+d_p53killer_born(2) = 1;
 
-% -
-dn_MDM2_die = zeros(N,1);
-dn_MDM2_die(4) = -1;
-dn_MDM2_ARF = zeros(N,1);
-dn_MDM2_ARF(4) = -1;
+d_p53killer_die = zeros(N,1);
+d_p53killer_die(2) = -1;
+
+d_p53killer_PP = zeros(N,1);
+d_p53killer_PP(1) = 1;
+d_p53killer_PP(2) = -1;
+
+% (3: MDM2)
+d_MDM2_born = zeros(N,1);
+d_MDM2_born(3) = 1;
+
+d_MDM2_die = zeros(N,1);
+d_MDM2_die(3) = -1;
 
 % (4: ARF)
-% +
-dp_ARF_born = zeros(N,1);
-dp_ARF_born(5) = 1;
-dp_ARF_E2F1 = zeros(N,1);
-dp_ARF_E2F1(5) = 1;
-dp_ARF_disso = zeros(N,1);
-dp_ARF_disso(5) = 1;
+d_ARF_born = zeros(N,1);
+d_ARF_born(5) = 1;
 
-% - 
-dn_ARF_die = zeros(N,1);
-dn_ARF_die(5) = -1;
-dn_ARF_asso = zeros(N,1);
-dn_ARF_asso(5) = -1;
+d_ARF_die = zeros(N,1);
+d_ARF_die(5) = -1;
 
 % (5: ARF/MDM2)
+d_ARF_MDM2_asso = zeros(N,1);
+d_ARF_MDM2_asso(3) = -1;
+d_ARF_MDM2_asso(4) = -1;
+d_ARF_MDM2_asso(5) = 1;
+
+d_ARF_MDM2_disso = zeros(N,1);
+d_ARF_MDM2_disso(3) = 1;
+d_ARF_MDM2_disso(4) = 1;
+d_ARF_MDM2_disso(5) = -1;
+
+d_ARF_MDM2die = zeros(N,1);
+d_ARF_MDM2die(3) = -1;
+d_ARF_MDM2die(4) = 1;
+d_ARF_MDM2die(5) = -1;
+
+d_ARFdie_MDM2_ARFdie = zeros(N,1);
+d_ARFdie_MDM2_ARFdie(3) = 1;
+d_ARFdie_MDM2_ARFdie(4) = -1;
+d_ARFdie_MDM2_ARFdie(5) = -1;
+
+% (6: CycE)
+d_CycE_born = zeros(N,1);
+d_CycE_born(6) = 1;
+
+d_CycE_die = zeros(N,1);
+d_CycE_die(6) = -1;
+
+% (7: E2F1)
+d_RB_E2F1_asso = zeros(N,1);
+d_RB_E2F1_asso(7) = -1;
+
+d_RB_E2F1_disso = zeros(N,1);
+d_RB_E2F1_disso(7) = 1;
+
+
+% (8: RBp)
 % +
-dp_ARF_MDM2_asso = zeros(N,1);
-dp_ARF_MDM2_asso(6) = 1;
-
-% -
-dn_ARF_MDM2_disso = zeros(N,1);
-dn_ARF_MDM2_disso(6) = -1;
-dn_ARF_MDM2_dieMDM2 = zeros(N,1);
-dn_ARF_MDM2_dieMDM2(6) = -1;
-dn_ARF_MDM2_dieARF = zeros(N,1);
-dn_ARF_MDM2_dieARF(6) = -1;
-
-% (6: E2F1)
-% +
-dp_E2F_disso = zeros(N,1);
-dp_E2F_disso(7) = 1;
-
-% -
-dn_E2F_asso = zeros(N,1);
-dn_E2F_asso(7) = -1;
-
-% (7: RBp)
-% +
-dp_RBp_born = zeros(N, 1);
-dp_RBp_born(8) = 1;
+d_RBp_born = zeros(N, 1);
+d_RBp_born(8) = 1;
 
 % - 
-dn_RBp_die = zeros(N,1);
-dp_RBp_born(8) = -1;    
-
-% (8: CycE)
-% +
-dp_CycE_born = zeros(N,1);
-dp_CycE_born(9) = 1;
-
-% - 
-dn_CycE_die = zeros(N,1);
-dn_CycE_die(9) = -1;
-dn_CycE_asso = zeros(N,1);
-dn_CycE_asso(9) = -1;
+d_RBp_die = zeros(N,1);
+d_RBp_born(8) = -1;    
 
 % (9: p21)
-% +
-% - 
 
-% (RB/E2F1)
-% (RB)
+% (10: p21/CycE)
+
+% [11: RB/E2F1]
+% [12: RB]
     
 % State-change matrix
 D = [
-     dp_p53helper_born, dp_p53helper_pp, dn_p53helper_die dn_p53helper_DYRK2,...
-     dp_p53killer_DYRK2, dn_p53killer_die, dn_p53killer_pp, ...
-     dp_MDM2_born, dp_MDM2_p53T, dp_MDM2_disso, dn_MDM2_die, dn_MDM2_ARF, ...
-     dp_ARF_born, dp_ARF_E2F1, dp_ARF_disso, dn_ARF_die, dn_ARF_asso, ...
-     dp_ARF_MDM2_asso, dn_ARF_MDM2_disso, dn_ARF_MDM2_dieMDM2, dn_ARF_MDM2_dieARF, ...
-     dp_E2F_disso, dn_E2F_asso, ...
-     dp_RBp_born, dn_RBp_die, ...
+     d_p53helper_born, d_p53helper_die, ...     
+     d_p53killer_born, d_p53killer_die, d_p53killer_PP, ...
+     d_MDM2_born, d_MDM2_p53T, d_MDM2_disso, d_MDM2_die, d_ARF_MDM2_asso, ...
+     d_ARF_born, d_ARF_E2F1, d_ARF_disso, d_ARF_die, d_ARF_asso, ...
+     d_ARF_MDM2_asso, d_ARF_MDM2_disso, d_ARF_MDM2_dieMDM2, d_ARF_MDM2_dieARF, ...
+     d_RB_E2F1_disso, d_RB_E2F1_asso, ...
+     d_RBp_born, d_RBp_die, ...
      
     ]; 
 
@@ -312,14 +300,11 @@ for i = 1:M
         r2 = rand;                                                          % 2nd dice    
 
         % update propensity matrix
-        %a_matrix = [px*kx_ON, n_xz(1,1)*gamma_x, (basal_z*kz_ON + Hxz_act(n_xz(1,1))*(1-basal_z)*kz_ON), n_xz(2,1)*gamma_z];
-        
-        a_matrix = [px*kx_ON, n_xz(1,1)*gamma_x, (basal_z*kz_ON + Hxz_act(n_xz(1,1))*(1-basal_z)*kz_ON), n_xz(2,1)*gamma_z];
-        
-        
-        % State changing matrix
-        %D = [round(exprnd(b_x)) , (-1) , 0 , 0 ;...
-             %0 , 0 , round(exprnd(b_z)) , (-1)];
+        %a_matrix = [px*kx_ON, n_xz(1,1)*gamma_x, (basal_z*kz_ON + Hxz_act(n_xz(1,1))*(1-basal_z)*kz_ON), n_xz(2,1)*gamma_z];        
+        a_matrix = [
+                    k_sp53, (kp_dp53 + stateVector(3))*stateVector(1), 
+                    
+                   ];
 
         % [State recording]
         tg{i} = [tg{i} t];                                                       
@@ -338,16 +323,6 @@ for i = 1:M
         stateVector = stateVector + D(:,u);
 
         % [Negative value filters]
-        %{
-        if n_xz(1,1) <0
-            n_xz(1,1) =0;
-        end
-
-        if n_xz(2,1) <0
-            n_xz(2,1) = 0;
-        end
-        %}
-        
         for j = 1 : length(stateVector)
             if stateVector(j) < 0
                 stateVector(j) = 0;
