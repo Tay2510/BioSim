@@ -78,7 +78,7 @@ for i = 2 : N
     end
     MDM2(i) = MDM2(i - 1) + delta_t * (0.02 + 0.3 * (p53killer(i - 1) ...
         + p53helper(i - 1)) - 0.1 * MDM2(i - 1) - 10 * ARF(i - 1) * ...
-        MDM2(i - 1) + 2.1 * ARF_MDM2(i - 1))+ 0.1*sqrt(MDM2(i-1)*delta_t)*randn();
+        MDM2(i - 1) + 2.1 * ARF_MDM2(i - 1))+ sqrt(MDM2(i-1)*delta_t)*randn();
     if MDM2(i) < 0
         MDM2(i) = 0;
     end
