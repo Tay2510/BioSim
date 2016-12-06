@@ -1,7 +1,7 @@
-function SDE(T_end, delta_t)
+function [p53] = SDE(T_end, delta_t)
 
 if nargin<2
-    T_end = 20;
+    T_end = 2;
     delta_t = 0.001;
 end
 
@@ -67,13 +67,13 @@ for i = 2 : N
     end
     p53helper(i) = p53helper(i - 1) + delta_t * (-DYRK2(i - 1) * ...
         p53helper(i - 1) / (0.1 + p53helper(i - 1)) + 0.5 - ...
-        (0.1 + MDM2(i - 1)) * p53helper(i - 1) + 0.5 * p53killer(i - 1) ...
+        (0.1 + MDM2(i - 1)) * p53helper(i - 1) + kdpp53 * p53killer(i - 1) ...
         /(0.1 + p53killer(i - 1)))+ sqrt(p53helper(i-1)*delta_t)*randn();
     if p53helper(i) < 0
         p53helper(i) = 0;
     end
     p53killer(i) = p53killer(i - 1) + delta_t * (DYRK2(i - 1) * ...
-        p53helper(i - 1) / (0.1 + p53helper(i - 1)) - 0.5 * ...
+        p53helper(i - 1) / (0.1 + p53helper(i - 1)) - kdpp53 * ...
         p53killer(i - 1) / (0.1 + p53killer(i - 1)) - (0.1 + MDM2(i - 1) * ...
         p53killer(i - 1)))+ sqrt(p53killer(i-1)*delta_t)*randn();
     if p53killer(i) < 0
@@ -98,7 +98,7 @@ for i = 2 : N
         ARF_MDM2(i) = 0;
     end
     E2F1(i) = E2F1(i - 1) + delta_t * (-5 * RB(i - 1) * E2F1(i - 1) + ...
-        RB_E2F1(i - 1))+ sqrt(E2F1(i-1)*delta_t)*randn();
+        kdsRE * RB_E2F1(i - 1))+ sqrt(E2F1(i-1)*delta_t)*randn();
     if E2F1(i) < 0
         E2F1(i) = 0;
     end
@@ -129,12 +129,19 @@ for i = 2 : N
     if RB(i) < 0
         RB(i) = 0;
     end
+    
+    if i == N/2
+        kdpp53 = 0.8;
+        kdsRE = 1.2;
+    end
 end
 
 
 %% Plot
-plot(timeline, p53killer, timeline, p53helper, timeline, MDM2, ...
-    timeline, ARF, timeline, RB, timeline, RBp);
-legend('p53_k_i_l_l_e_r','p53_h_e_l_p_e_r','MDM2','ARF', 'RB', 'RBp');
-xlabel('time');
-ylabel('concentration');
+% plot(timeline, p53killer, timeline, p53helper, timeline, MDM2, ...
+%     timeline, ARF, timeline, RB, timeline, RBp);
+% legend('p53_k_i_l_l_e_r','p53_h_e_l_p_e_r','MDM2','ARF', 'RB', 'RBp');
+% xlabel('time');
+% ylabel('concentration');
+
+p53 = [p53killer(end, end), p53helper(end, end)];

@@ -116,7 +116,7 @@ for i = 2 : N
     if p21_CycE(i) < 0
         p21_CycE(i) = 0;
     end
-    RB_E2F1(i) = 3 - E2F1(i);
+    RB_E2F1(i) = 1 - E2F1(i);
     RB(i) = 2 - RBp(i) - RB_E2F1(i);
 end
 
