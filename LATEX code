@@ -1,0 +1,41 @@
+$$\frac{d[DYRK2]}{dt} = -k_{out} \times [DYRK2]$$
+
+$$\frac{d[p53helper]}{dt} = k_{sp53} - ({k_{dp53}}^{'} + [MDM2])  \times  [p53helper] - \frac{k_{pp53} \times [DYRK2]\times [P53helper]}{J_{pp53} + [p53helper]}$$
+
+$$\frac{d[p53killer]}{dt} = \frac{k_{pp53}\times [DYRK2]\times [P53helper]}{J_{pp53}+[p53helper]}-\frac{{k_{dpp53}\times [PP]\times [p53killer]}}{J_{pp53} + [p53killer]}-(k_{dp53}^{'} + [MDM2]) \times [P53killer]$$
+
+$$\frac{d[MDM2]}{dt} = k_{sMDM2}^{'} + k_{sMDM2}^{''}\times [p53]_{T}-k_{dMDM2}^{'}\times [MDM2]-k_{asAM}\times [ARF]\times [MDM2]+(k_{dsAM}+k_{dARF})\times [ARF/MDM2]$$
+
+$$\frac{d[ARF]}{dt} = k_{sARF}^{'}+k_{sARF}^{''}\times [E2F1]-k_{dARF}\times [ARF]-k_{asAM}\times [ARF]\times [MDM2]+k_{dsAM}\times [ARF/MDM2]+k_{dMDM2}^{'}\times [ARF/MDM2]$$
+
+$$\frac{d[ARF/MDM2]}{dt}=k_{asAM}\times [ARF]\times [MDM2]-k_{dsAM}\times [ARF/MDM2]-k_{dMDM2}^{'}\times [ARF/MDM2]-k_{dARF}\times [ARF/MDM2]$$
+
+$$\frac{d[CycE]}{dt}=k_{sE}^{'}+k_{sE}^{''}\times [E2F1]-k_{dE}\times [CycE]-k_{asp21E}\times [p21]\times [CycE]+(k_{dsp21E}+k_{dp21})\times [p21/CycE]$$
+
+$$\frac{d[E2F1]}{dt}=-k_{asRE}\times [RB]\times [E2F1]+k_{dsRE}\times [RB/E2F1]$$
+
+$$\frac{d[RB_{p}]}{dt} = \frac{k_{pRB}\times [CycE]\times [RB]}{J_{pRB}+[RB]}-\frac{k_{dpRB}\times [PP]\times [RB_{p}]}{J_{dpRB}+[RB_{p}]}$$
+
+$$\frac{d[p21]}{dt}=k_{sp21}^{'}+k_{sp21}^{''}\times [p53killer]+k_{sp21}^{'''}\times [p53killer]-k_{dp21}\times [p21]-k_{asp21E}\times [p21]\times [CycE]+(k_{dsp21E}+k_{dE})\times [p21/CycE]$$
+
+$$\frac{d[p21/CycE]}{dt}=k_{asp21E}\times [p21]\times [CycE]-k_{dsp21E}\times [p21/CycE]-k_{dE}\times [p21/CycE]-k_{dp21}\times [p21/CycE]$$
+
+$$[RB/E2F1]=[E2F1]_{T}-[E2F1]$$
+
+$$[RB] = [RB]_{T}-[RB_{P}]-[RB/E2F1]$$
+
+$$k_{out}=0.0003, [DYRK2]_{T}=2, k_{sp53}=0.5, k_{dp53}^{'}=0.1, k_{pp53}=1,$$
+
+$$J_{pp53} = 0.1, k_{dpp53}=0.5, J_{dpp53}=0.1, [PP]=1,$$
+
+$$k_{sMDM2}^{'}=0.02, k_{sMDM2}^{''}=0.3, k_{dMDM2}^{'}=0.1, k_{dMDM2}^{''}=0.1, k_{sARF}^{'}=0.01, k_{sARF}^{''}=0.3, k_{dARF}=0.1,$$
+
+$$k_{asAM}=10, k_{dsAM} = 2, k_{sE}^{'}=0.01, k_{sE}^{''}=0.5,k_{dE}=0.12, k_{asRE}=5, k_{dsRE}=1, k_{pRB}=0.1,$$
+
+$$J_{pRB} = 0.1, k_{dpRB} = 0.5, J_{dpRB} = 0.1, [RB]_{T} = 2, [E2F1]_{T}=3, k_{sp21}^{'}=0.03,k_{sp21}^{''}=0.3,$$
+
+$$k_{sp21}^{''}=0.01, k_{dp21}=0.2, k_{as21E}=10, k_{dsp21E}=1,$$
+
+$$[p53]_{T}=0.78, [MDM2]_{T}=2.53, [ARF]_{T}=2.79, [ARF/MDM2]=1.99, [CycE]_{T}=3.83, [E2F1]=0.9,$$
+
+$$[RB_{p}]=1.88, [p21]_{T}=1.32, [p21/CycE]=1.25$$
