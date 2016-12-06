@@ -4,12 +4,15 @@
 % @algorithm: Gillespie SSA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc
+clear all;
 tic
 fprintf('----------------------[Start Simulation]----------------------\n');
 
+load('collection.mat');
+
 %% General Setting
-M = 1;                                                                      % number of trials
-Time_End = 10;                                                              % unit: ?   (end point of time line)  
+M = 500;                                                                      % number of trials
+Time_End = 20;                                                              % unit: ?   (end point of time line)  
 
 %% Model parameters
 % cell volume
@@ -51,7 +54,7 @@ k_pp53 = 1;
 % ### increase in virus B-pathway ###
 % -----------------------------------
 k_dpp53 = 0.5; 
-k_dpp53_virus = 0.8;
+k_dpp53_virus = 0.7;
 % -----------------------------------
 
 j_pp53 = 0.1 * V;
@@ -77,7 +80,7 @@ k_asRE = 5 / V;
 % ### increase in virus A-pathway ###
 % -----------------------------------
 k_dsRE = 1; 
-k_dsRE_virus = 1.2;
+k_dsRE_virus = 2.3;
 % -----------------------------------
 
 k_pRB = 1;
@@ -95,8 +98,10 @@ kppp_sp21 = 0.01;
 %%  Preallocation 
 [tg,ng] = deal(cell(1,M));                                           
 
-dist_p53helper = zeros(1,M);
-dist_p53killer = zeros(1,M);
+dist_p53helper_before = zeros(1,M);
+dist_p53killer_before = zeros(1,M);
+dist_p53helper_after = zeros(1,M);
+dist_p53killer_after = zeros(1,M);
 
 n_p53helper = init_p53helper;
 n_p53killer = init_p53killer;
@@ -282,7 +287,8 @@ for i = 1:M
     % [Initialization]
     t = 0;                                                                  % starting time     
     sVect = initialState;    
-        
+    isInfected = false;
+    
     tg{i} = [];                                                             % for recording time
     ng{i} = [];                                                             % for recording particle number
     
@@ -333,8 +339,8 @@ for i = 1:M
         end
         tau = (log(1/r1))/astr;
         u = find(cumsum(a_matrix)>=astr*r2, 1);
-        t = t + tau;                                                        % updating time
-
+        t = t + tau;                                                        % updating time        
+        
         % [Update current state]        
         sVect = sVect + D(:,u);
 
@@ -345,14 +351,30 @@ for i = 1:M
         sVect(11) = total_E2F1 - sVect(7);
         sVect(12) = total_RB - sVect(8) - sVect(11);        
         
-        disp(t);
+        % introduce virus
+        if (~isInfected) && (t > Time_End/2)
+            k_dpp53 = k_dpp53_virus;           
+            k_dsRE = k_dsRE_virus;             
+            isInfected = true;
+            dist_p53helper_before(i) = sVect(1);
+            dist_p53killer_before(i) = sVect(2);
+        end
+               
     end                                                                     % [End] Gillespie main framework
     % ====================================================================
+    dist_p53helper_after(i) = sVect(1);
+    dist_p53killer_after(i) = sVect(2);
     
     % [update waitbar]
-    fprintf('progress: %d %% \r', 100*i/M);
+    fprintf('progress : %d %% \r', 100*i/M);
 
 end                                                                         % [End] of one trial 
+
+p53helper_before = [p53helper_before dist_p53helper_before];
+p53killer_before = [p53killer_before dist_p53killer_before];
+p53helper_after = [p53helper_after dist_p53helper_after];
+p53killer_after = [p53killer_after dist_p53killer_after];
+save('collection.mat', 'p53helper_before', 'p53killer_before', 'p53helper_after', 'p53killer_after');
 
 %% Plot panel
 % [Sample trajectory]

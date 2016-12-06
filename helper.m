@@ -120,6 +120,6 @@ for i = 2 : N
        kdsRE = kdsRE_change;
     end
 end
-ratio2 = p53killer(N);
+ratio2 = p53helper(N)/p53killer(N);
 
 
