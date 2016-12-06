@@ -129,7 +129,7 @@ end
 % legend('p53_k_i_l_l_e_r','p53_h_e_l_p_e_r','MDM2','ARF', 'RB', 'RBp', 'CycE', 'p21', 'p21_CycE');
 % ylabel('concentration');
 
-kdpp53_change = 0.6 : 0.1 : 4;
+kdpp53_change = 0.5 : 0.1 : 4;
 kdsRE_change = 1 : 0.1 : 6;
 diff = zeros(length(kdpp53_change), length(kdsRE_change));
 for i = 1 : length(kdpp53_change)
