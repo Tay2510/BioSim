@@ -6,7 +6,6 @@ T_end = 20;
 delta_t = 0.01;
 N = T_end/delta_t;
 timeline = 0:delta_t:(T_end - delta_t);
-sigma = 0.001;
 
 MDM2_initial = 2.53;
 ARF_initial = 2.79;
@@ -100,7 +99,7 @@ for i = 2 : N
     if E2F1(i) < 0
         E2F1(i) = 0;
     end
-    RBp(i) = sigma + RBp(i - 1) + delta_t * (-0.5 * RBp(i - 1) / ...
+    RBp(i) = RBp(i - 1) + delta_t * (-0.5 * RBp(i - 1) / ...
         (0.1 + RBp(i - 1)));
     if RBp(i) < 0
         RBp(i) = 0;
