@@ -6,7 +6,7 @@ $$\frac{d[DYRK2]}{dt} = -k_{out} \times [DYRK2]$$
 
 $$\frac{d[p53helper]}{dt} = k_{sp53} - ({k_{dp53}}^{'} + [MDM2])  \times  [p53helper] - \frac{k_{pp53} \times [DYRK2]\times [P53helper]}{J_{pp53} + [p53helper]}$$
 
-$$\frac{d[p53killer]}{dt} = \frac{k_{pp53}\times [DYRK2]\times [P53helper]}{J_{pp53}+[p53helper]}-\frac{{k_{dpp53}\times [PP]\times [p53killer]}}{J_{pp53} + [p53killer]}-(k_{dp53}^{'} + [MDM2]) \times [P53killer]$$
+$$\frac{d[p53killer]}{dt} = \frac{k_{pp53}\times [DYRK2]\times [P53helper]}{J_{pp53}+[p53helper]}-\frac{{k_{dpp53}\times [PP]\times [p53killer]}}{J_{pp53} + [p53killer]}-(k_{dp53}^{'} + [MDM2]) \times [p53killer]$$
 
 $$\frac{d[MDM2]}{dt} = k_{sMDM2}^{'} + k_{sMDM2}^{''}\times [p53]_{T}-k_{dMDM2}^{'}\times [MDM2]-k_{asAM}\times [ARF]\times [MDM2]+(k_{dsAM}+k_{dARF})\times [ARF/MDM2]$$
 
