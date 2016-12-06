@@ -6,7 +6,6 @@ T_end = 20;
 delta_t = 0.01;
 N = T_end/delta_t;
 timeline = 0:delta_t:(T_end - delta_t);
-sigma = 0.001;
 
 MDM2_initial = 2.53;
 ARF_initial = 2.79;
@@ -100,17 +99,25 @@ for i = 2 : N
     if E2F1(i) < 0
         E2F1(i) = 0;
     end
-    RBp(i) = sigma + RBp(i - 1) + delta_t * (-0.5 * RBp(i - 1) / ...
+    RBp(i) = RBp(i - 1) + delta_t * (CycE(i - 1) * RB(i - 1) /(0.1 + RB(i - 1)) -0.5 * RBp(i - 1) / ...
         (0.1 + RBp(i - 1)));
     if RBp(i) < 0
         RBp(i) = 0;
     end
+    CycE(i) = CycE(i - 1) + delta_t * (0.01 + 0.5 * E2F1(i - 1) - 0.12 * CycE(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.2 * p21_CycE(i - 1));
+    if CycE(i) < 0
+        CycE = 0;
+    end
+    p21(i) = p21(i - 1) + delta_t * (0.03 + 0.3 * p53helper(i - 1) + 0.01 * p53killer(i - 1) - 0.2 * p21(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.12 * p21_CycE(i - 1));
+    if p21(i) < 0
+        p21(i) = 0;
+    end
+    p21_CycE(i) = p21_CycE(i - 1) + delta_t * (10 * p21(i - 1) * CycE(i - 1) - p21_CycE(i - 1) - 0.32 * p21_CycE(i - 1));
+    if p21_CycE(i) < 0
+        p21_CycE(i) = 0;
+    end
     RB_E2F1(i) = 1 - E2F1(i);
     RB(i) = 2 - RBp(i) - RB_E2F1(i);
-    CycE(i) = CycE(i - 1) + delta_t * (0.01 + 0.5 * E2F1(i - 1) - 0.12 * CycE(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.2 * p21_CycE(i - 1));
-    p21(i) = p21(i - 1) + delta_t * (0.03 + 0.3 * p53helper(i - 1) + 0.01 * p53killer(i - 1) - 0.2 * p21(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.12 * p21_CycE(i - 1));
-    p21_CycE(i) = p21_CycE(i - 1) + delta_t * (10 * p21(i - 1) * CycE(i - 1) - p21_CycE(i - 1) - 0.32 * p21_CycE(i - 1));
- 
 end
 
 %% Plot
