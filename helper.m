@@ -1,6 +1,6 @@
 function [ratio2] = helper(kdpp53_change, kdsRE_change)
 T_end = 20;
-delta_t = 0.01;
+delta_t = 0.001;
 N = T_end/delta_t;
 
 MDM2_initial = 2.53;
@@ -103,7 +103,7 @@ for i = 2 : N
     end
     CycE(i) = CycE(i - 1) + delta_t * (0.01 + 0.5 * E2F1(i - 1) - 0.12 * CycE(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.2 * p21_CycE(i - 1));
     if CycE(i) < 0
-        CycE = 0;
+        CycE(i) = 0;
     end
     p21(i) = p21(i - 1) + delta_t * (0.03 + 0.3 * p53helper(i - 1) + 0.01 * p53killer(i - 1) - 0.2 * p21(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.12 * p21_CycE(i - 1));
     if p21(i) < 0
@@ -113,11 +113,13 @@ for i = 2 : N
     if p21_CycE(i) < 0
         p21_CycE(i) = 0;
     end
-    RB_E2F1(i) = 1 - E2F1(i);
+    RB_E2F1(i) = 3 - E2F1(i);
     RB(i) = 2 - RBp(i) - RB_E2F1(i);
-    if i == N / 2
+    if i == N / 2 + 1
        kdpp53 = kdpp53_change;
        kdsRE = kdsRE_change;
     end
 end
-ratio2 = p53helper(N) / p53killer(N);
+ratio2 = p53killer(N);
+
+
