@@ -15,8 +15,8 @@ RBp_initial = 1.88;
 RB_E2F1_initial = 0;
 RB_initial = 0;
 
-p53helper_initial = 0.39;
-p53killer_initial = 0.39;
+p53helper_initial = 0.68;
+p53killer_initial = 0.1;
 DYRK2_initial = 1;
 
 DYRK2 = zeros(1, N);
@@ -33,7 +33,7 @@ p53killer(1) = p53killer_initial;
 p53helper(1) = p53helper_initial;
 MDM2(1) = MDM2_initial;
 ARF(1) = ARF_initial;
-ARF_MDM2(1) = ARF_initial;
+ARF_MDM2(1) = ARF_MDM2_initial;
 E2F1(1) = E2F1_initial;
 RBp(1) = RBp_initial;
 RB_E2F1(1) = RB_E2F1_initial;
@@ -45,14 +45,14 @@ for i = 2 : N
     if DYRK2(i) < 0
         DYRK2(i) = 0;
     end
-    p53helper(i) = p53helper(i - 1) + delta_t * (-DYRK2(i - 1) * ...
+    p53helper(i) = p53helper(i - 1) + delta_t * (-1 * ...
         p53helper(i - 1) / (0.1 + p53helper(i - 1)) + 0.5 - ...
         (0.1 + MDM2(i - 1)) * p53helper(i - 1) + 0.5 * p53killer(i - 1) ...
         /(0.1 + p53killer(i - 1)));
     if p53helper(i) < 0
         p53helper(i) = 0;
     end
-    p53killer(i) = p53killer(i - 1) + delta_t * (DYRK2(i - 1) * ...
+    p53killer(i) = p53killer(i - 1) + delta_t * (1* ...
         p53helper(i - 1) / (0.1 + p53helper(i - 1)) - 0.5 * ...
         p53killer(i - 1) / (0.1 + p53killer(i - 1)) - (0.1 + MDM2(i - 1) * ...
         p53killer(i - 1)));

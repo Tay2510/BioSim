@@ -134,110 +134,110 @@ initialState = sVect; % store for future initialization
 
 % Reaction channels(events) = columns of the state-change matrix    
 % (1: p53helper) 
-d_p53helper_born = zeros(N,1); 
+d_p53helper_born = zeros(N,1);% #1
 d_p53helper_born(1) = 1;
 
-d_p53helper_die = zeros(N,1);
+d_p53helper_die = zeros(N,1); % #2
 d_p53helper_die(1) = -1;
     
 % (2: p53killer)
-d_p53killer_die = zeros(N,1);
+d_p53killer_die = zeros(N,1); % #3
 d_p53killer_die(2) = -1;
 
-d_p53killer_DYRK2 = zeros(N,1);
+d_p53killer_DYRK2 = zeros(N,1); % #4
 d_p53killer_DYRK2(1) = -1;
 d_p53killer_DYRK2(2) = 1;
 
-d_p53killer_PP = zeros(N,1);
+d_p53killer_PP = zeros(N,1); % #5
 d_p53killer_PP(1) = 1;
 d_p53killer_PP(2) = -1;
 
 % (3: MDM2)
-d_MDM2_born = zeros(N,1);
+d_MDM2_born = zeros(N,1); % #6
 d_MDM2_born(3) = 1;
 
-d_MDM2_die = zeros(N,1);
+d_MDM2_die = zeros(N,1); % #7
 d_MDM2_die(3) = -1;
 
 % (4: ARF)
-d_ARF_born = zeros(N,1);
+d_ARF_born = zeros(N,1); % #8
 d_ARF_born(5) = 1;
 
-d_ARF_die = zeros(N,1);
+d_ARF_die = zeros(N,1); % #9
 d_ARF_die(5) = -1;
 
 % (5: ARF/MDM2)
-d_ARF_MDM2_asso = zeros(N,1);
+d_ARF_MDM2_asso = zeros(N,1); % #10
 d_ARF_MDM2_asso(3) = -1;
 d_ARF_MDM2_asso(4) = -1;
 d_ARF_MDM2_asso(5) = 1;
 
-d_ARF_MDM2_disso = zeros(N,1);
+d_ARF_MDM2_disso = zeros(N,1); % #11
 d_ARF_MDM2_disso(3) = 1;
 d_ARF_MDM2_disso(4) = 1;
 d_ARF_MDM2_disso(5) = -1;
 
-d_ARF_MDM2die = zeros(N,1);
+d_ARF_MDM2die = zeros(N,1); % #12
 d_ARF_MDM2die(3) = -1;
 d_ARF_MDM2die(4) = 1;
 d_ARF_MDM2die(5) = -1;
 
-d_ARFdie_MDM2 = zeros(N,1);
+d_ARFdie_MDM2 = zeros(N,1); % #13
 d_ARFdie_MDM2(3) = 1;
 d_ARFdie_MDM2(4) = -1;
 d_ARFdie_MDM2(5) = -1;
 
 % (6: CycE)
-d_CycE_born = zeros(N,1);
+d_CycE_born = zeros(N,1); % #14
 d_CycE_born(6) = 1;
 
-d_CycE_die = zeros(N,1);
+d_CycE_die = zeros(N,1); % #15
 d_CycE_die(6) = -1;
 
 % (7: E2F1)
-d_RB_E2F1_asso = zeros(N,1);
+d_RB_E2F1_asso = zeros(N,1); % #16
 d_RB_E2F1_asso(7) = -1;
 d_RB_E2F1_asso(11) = 1;
 d_RB_E2F1_asso(12) = -1;
 
-d_RB_E2F1_disso = zeros(N,1);
+d_RB_E2F1_disso = zeros(N,1); % #17
 d_RB_E2F1_disso(7) = 1;
 d_RB_E2F1_asso(11) = -1;
 d_RB_E2F1_asso(12) = 1;
 
 % (8: RBp)
-d_RB_PP = zeros(N, 1);
+d_RB_PP = zeros(N, 1); % #18
 d_RB_PP(8) = 1;
 d_RB_PP(12) = -1;
 
-d_RBp_dPP = zeros(N,1);
+d_RBp_dPP = zeros(N,1); % #19
 d_RBp_dPP(8) = -1;
 d_RBp_dPP(12) = 1;
 
 % (9: p21)
-d_p21_born = zeros(N,1);
+d_p21_born = zeros(N,1); % #20
 d_p21_born(9) = 1;
 
-d_p21_die = zeros(N,1);
+d_p21_die = zeros(N,1); % #21
 d_p21_die(9) = -1;
 
 % (10: p21/CycE)
-d_p21_CycE_asso = zeros(N,1);
+d_p21_CycE_asso = zeros(N,1); % #22
 d_p21_CycE_asso(6) = -1;
 d_p21_CycE_asso(9) = -1;
 d_p21_CycE_asso(10) = 1;
 
-d_p21_CycE_disso = zeros(N,1);
+d_p21_CycE_disso = zeros(N,1); % #23
 d_p21_CycE_disso(6) = 1;
 d_p21_CycE_disso(9) = 1;
 d_p21_CycE_disso(10) = -1;
 
-d_p21die_CycE = zeros(N,1);
+d_p21die_CycE = zeros(N,1); % #24
 d_p21die_CycE(6) = 1;
 d_p21die_CycE(9) = -1;
 d_p21die_CycE(10) = -1;
 
-d_p21_CycEdie = zeros(N,1);
+d_p21_CycEdie = zeros(N,1); % #25
 d_p21_CycEdie(6) = -1;
 d_p21_CycEdie(9) = 1;
 d_p21_CycEdie(10) = -1;
@@ -341,6 +341,10 @@ for i = 1:M
         % [Negative value filters]
         sVect(sVect < 0) = 0;
         
+        % update state
+        sVect(11) = total_E2F1 - sVect(7);
+        sVect(12) = total_RB - sVect(8) - sVect(11);        
+        
         disp(t);
     end                                                                     % [End] Gillespie main framework
     % ====================================================================
@@ -354,7 +358,7 @@ end                                                                         % [E
 % [Sample trajectory]
 % select target to be included in the plot
 % ----------------------------------------  
-selectVect = [1 2 3 4 12]; 
+selectVect = [1 2 3 4 8 12]; 
 % ----------------------------------------  
 legendDict = {'p53_h_e_l_p_e_r', ...1
               'p53_k_i_l_l_e_r', ...2
