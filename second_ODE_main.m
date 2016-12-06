@@ -120,6 +120,7 @@ for i = 2 : N
     RB(i) = 2 - RBp(i) - RB_E2F1(i);
     if i == N / 2
         ratio1 = p53helper(i) / p53killer(i);
+        break;
     end
 end
 
