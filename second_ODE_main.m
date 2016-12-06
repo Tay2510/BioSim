@@ -1,9 +1,9 @@
-clc
+clc;
 clear all;
 close all;
 
 T_end = 20;
-delta_t = 0.01;
+delta_t = 0.001;
 N = T_end/delta_t;
 timeline = 0:delta_t:(T_end - delta_t);
 
@@ -106,7 +106,7 @@ for i = 2 : N
     end
     CycE(i) = CycE(i - 1) + delta_t * (0.01 + 0.5 * E2F1(i - 1) - 0.12 * CycE(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.2 * p21_CycE(i - 1));
     if CycE(i) < 0
-        CycE = 0;
+        CycE(i) = 0;
     end
     p21(i) = p21(i - 1) + delta_t * (0.03 + 0.3 * p53helper(i - 1) + 0.01 * p53killer(i - 1) - 0.2 * p21(i - 1) - 10 * p21(i - 1) * CycE(i - 1) + 1.12 * p21_CycE(i - 1));
     if p21(i) < 0
@@ -116,26 +116,26 @@ for i = 2 : N
     if p21_CycE(i) < 0
         p21_CycE(i) = 0;
     end
-    RB_E2F1(i) = 1 - E2F1(i);
+    RB_E2F1(i) = 3 - E2F1(i);
     RB(i) = 2 - RBp(i) - RB_E2F1(i);
     if i == N / 2
-        ratio1 = p53helper(i) / p53killer(i);
+        ratio1 = p53killer(i);
         break;
     end
 end
 
-%% Plot
-% plot(timeline, p53killer, timeline, p53helper, timeline, MDM2, timeline, ARF, timeline, RB, timeline, RBp, timeline, CycE, timeline, p21, timeline, p21_CycE);
+% Plot
+% figure(1), plot(timeline, p53killer, timeline, p53helper, timeline, MDM2, timeline, ARF, timeline, RB, timeline, RBp, timeline, CycE, timeline, p21, timeline, p21_CycE);
 % legend('p53_k_i_l_l_e_r','p53_h_e_l_p_e_r','MDM2','ARF', 'RB', 'RBp', 'CycE', 'p21', 'p21_CycE');
 % ylabel('concentration');
 
-kdpp53_change = 0.6 : 0.01 : 2;
-kdsRE_change = 1 : 0.01 : 2;
+kdpp53_change = 0.6 : 0.1 : 4;
+kdsRE_change = 1 : 0.1 : 6;
 diff = zeros(length(kdpp53_change), length(kdsRE_change));
 for i = 1 : length(kdpp53_change)
     for j = 1 : length(kdsRE_change)
         ratio2 = helper(kdpp53_change(i), kdsRE_change(j));
-        diff(i, j) = abs(ratio1 - ratio2);
+        diff(i, j) = ratio1 - ratio2;
     end
 end
-contour(diff);
+contourf(kdsRE_change, kdpp53_change, diff);
