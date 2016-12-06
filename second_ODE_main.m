@@ -139,3 +139,6 @@ for i = 1 : length(kdpp53_change)
     end
 end
 contourf(kdsRE_change, kdpp53_change, diff);
+title('p53 killer concentration');
+xlabel('kdsRE');
+ylabel('kdpp53');
